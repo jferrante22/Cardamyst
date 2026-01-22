@@ -70,10 +70,10 @@ body {
 
 .metric-card {
   background-color: white;
-  border-radius: 0.75rem;
+  border-radius: 0.625rem;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   border: 1px solid rgb(226 232 240 / 0.6);
-  padding: 1.5rem;
+  padding: 1rem;
   position: relative;
   overflow: hidden;
   transition: all 0.2s;
