@@ -295,3 +295,146 @@ export function formatFullNumber(num) {
   if (num === null || num === undefined) return '—';
   return Math.round(num).toLocaleString();
 }
+
+/**
+ * Parse the Cardamyst Contract Tracker Excel file
+ * @param {ArrayBuffer} buffer - The Excel file buffer
+ * @returns {Object} Parsed contract data
+ */
+export function parseContractData(buffer) {
+  const workbook = XLSX.read(buffer, { type: 'array' });
+
+  const data = {
+    lastUpdated: '',
+    contracts: [],
+    offerHistory: [],
+    rateComparison: [],
+    summary: {
+      total: 0,
+      signed: 0,
+      submitted: 0,
+      countered: 0
+    }
+  };
+
+  // Parse Contract Status
+  const statusSheet = workbook.Sheets['Contract Status'];
+  if (statusSheet) {
+    const statusData = XLSX.utils.sheet_to_json(statusSheet, { header: 1, defval: '' });
+
+    for (let i = 0; i < statusData.length; i++) {
+      const row = statusData[i];
+      const firstCell = String(row[0] || '').trim();
+
+      if (firstCell.startsWith('Last Updated:')) {
+        data.lastUpdated = firstCell.replace('Last Updated:', '').trim();
+      }
+
+      // Skip header rows
+      if (firstCell === 'Payer' || !firstCell || firstCell.includes('Cardamyst') || firstCell.includes('Last Updated')) {
+        continue;
+      }
+
+      // Parse contract rows
+      if (row[1] && row[2]) {
+        const status = String(row[8] || '').trim();
+        data.contracts.push({
+          payer: firstCell,
+          segment: String(row[1] || '').trim(),
+          contractPeriod: String(row[2] || '').trim(),
+          baseRebate: parsePercentValue(row[3]),
+          adminFee: parsePercentValue(row[4]),
+          dataFee: parsePercentValue(row[5]),
+          priceProtection: parsePercentValue(row[6]),
+          totalFees: parsePercentValue(row[7]),
+          status: status,
+          lastActionDate: row[9] || null,
+          nextAction: row[10] || null,
+          notes: String(row[11] || '').trim()
+        });
+
+        // Update summary counts
+        data.summary.total++;
+        if (status.toLowerCase() === 'signed') data.summary.signed++;
+        else if (status.toLowerCase() === 'submitted') data.summary.submitted++;
+        else if (status.toLowerCase().includes('counter')) data.summary.countered++;
+      }
+    }
+  }
+
+  // Parse Offer History
+  const historySheet = workbook.Sheets['Offer History'];
+  if (historySheet) {
+    const historyData = XLSX.utils.sheet_to_json(historySheet, { header: 1, defval: '' });
+
+    for (let i = 0; i < historyData.length; i++) {
+      const row = historyData[i];
+      const firstCell = String(row[0] || '').trim();
+
+      if (!firstCell || firstCell === 'Payer' || firstCell.includes('Contract Offer')) {
+        continue;
+      }
+
+      if (row[1] && row[2]) {
+        data.offerHistory.push({
+          payer: firstCell,
+          segment: String(row[1] || '').trim(),
+          version: String(row[2] || '').trim(),
+          baseRebate: parsePercentValue(row[3]),
+          adminFee: parsePercentValue(row[4]),
+          dataFee: parsePercentValue(row[5]),
+          priceProtection: parsePercentValue(row[6]),
+          total: parsePercentValue(row[7]),
+          offerType: String(row[8] || '').trim(),
+          responseDate: row[9] || null,
+          counterTerms: String(row[10] || '').trim(),
+          notes: String(row[11] || '').trim()
+        });
+      }
+    }
+  }
+
+  // Parse Rate Comparison
+  const rateSheet = workbook.Sheets['Rate Comparison'];
+  if (rateSheet) {
+    const rateData = XLSX.utils.sheet_to_json(rateSheet, { header: 1, defval: '' });
+
+    for (let i = 0; i < rateData.length; i++) {
+      const row = rateData[i];
+      const firstCell = String(row[0] || '').trim();
+
+      if (!firstCell || firstCell === 'Payer' || firstCell.includes('Rebate & Fee')) {
+        continue;
+      }
+
+      if (row[1]) {
+        data.rateComparison.push({
+          payer: firstCell,
+          segment: String(row[1] || '').trim(),
+          baseRebate: parsePercentValue(row[2]),
+          adminFee: parsePercentValue(row[3]),
+          dataFee: parsePercentValue(row[4]),
+          priceProtection: parsePercentValue(row[5]),
+          totalConcessions: parsePercentValue(row[6]),
+          status: String(row[7] || '').trim()
+        });
+      }
+    }
+  }
+
+  return data;
+}
+
+/**
+ * Parse percentage values (handles both "5%" and 0.05 formats)
+ */
+function parsePercentValue(value) {
+  if (value === null || value === undefined || value === '' || value === 'NaN') return null;
+  if (typeof value === 'number') {
+    // If it's already a decimal (like 0.05), convert to percentage
+    return value < 1 ? value * 100 : value;
+  }
+  const str = String(value).replace('%', '').trim();
+  const num = parseFloat(str);
+  return isNaN(num) ? null : num;
+}

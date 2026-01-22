@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle } from 'lucide-react';
 
-export default function FileUpload({ onFileLoad, currentFileName }) {
+export default function FileUpload({ onFileLoad, currentFileName, label = 'Data Source' }) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
   const fileInputRef = useRef(null);
@@ -59,7 +59,7 @@ export default function FileUpload({ onFileLoad, currentFileName }) {
   return (
     <div className="card">
       <div className="card-header">
-        <h3 className="text-lg font-semibold text-slate-800">Data Source</h3>
+        <h3 className="text-base font-semibold text-slate-800">{label}</h3>
         {currentFileName && (
           <p className="text-sm text-slate-500 mt-1 flex items-center space-x-2">
             <FileSpreadsheet className="w-4 h-4" />
