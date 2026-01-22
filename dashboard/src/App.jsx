@@ -168,7 +168,7 @@ export default function App() {
                 <MetricCard
                   title="Plans"
                   value={coverageData.planDetails?.length || 31}
-                  subtitle="Active placements"
+                  subtitle="With coverage"
                   icon={FileSpreadsheet}
                   color="amber"
                 />
