@@ -145,7 +145,8 @@ export default function App() {
 
   const totalSnapshot = coverageData.coverageSnapshot?.find(s => s.segment === 'TOTAL');
   const commercialSnapshot = coverageData.coverageSnapshot?.find(s => s.segment === 'Commercial (incl. Federal)');
-  const federalSnapshot = coverageData.coverageSnapshot?.find(s => s.segment.includes('Federal Programs'));
+  const medicareSnapshot = coverageData.coverageSnapshot?.find(s => s.segment === 'Medicare');
+  const medicaidSnapshot = coverageData.coverageSnapshot?.find(s => s.segment === 'Medicaid');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -164,11 +165,11 @@ export default function App() {
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
                 Key Performance Indicators
               </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <MetricCard
                   title="Total Coverage"
                   value={formatPercent(totalSnapshot?.coveragePercent * 100 || 0)}
-                  subtitle={`${formatFullNumber(totalSnapshot?.coveredLives || 0)} lives`}
+                  subtitle={`of ${formatNumber(totalSnapshot?.totalLives || 0)} lives`}
                   icon={Activity}
                   color="blue"
                 />
@@ -180,18 +181,25 @@ export default function App() {
                   color="green"
                 />
                 <MetricCard
-                  title="Federal"
-                  value={formatPercent(federalSnapshot?.coveragePercent * 100 || 0)}
-                  subtitle={`${formatFullNumber(federalSnapshot?.coveredLives || 0)} lives`}
+                  title="Medicare"
+                  value={formatPercent(medicareSnapshot?.coveragePercent * 100 || 0)}
+                  subtitle={`of ${formatNumber(medicareSnapshot?.totalLives || 0)} lives`}
                   icon={Users}
                   color="purple"
+                />
+                <MetricCard
+                  title="Medicaid"
+                  value={formatPercent(medicaidSnapshot?.coveragePercent * 100 || 0)}
+                  subtitle={`of ${formatNumber(medicaidSnapshot?.totalLives || 0)} lives`}
+                  icon={Users}
+                  color="amber"
                 />
                 <MetricCard
                   title="Plans"
                   value={coverageData.planDetails?.length || 31}
                   subtitle="With coverage"
                   icon={FileSpreadsheet}
-                  color="amber"
+                  color="blue"
                 />
               </div>
             </section>
