@@ -1,4 +1,4 @@
-import { FileCheck, Clock, Send, MessageSquare, AlertCircle } from 'lucide-react';
+import { FileCheck, Clock, Send, MessageSquare } from 'lucide-react';
 
 export default function ContractDashboard({ data }) {
   if (!data) return null;
@@ -84,6 +84,8 @@ export default function ContractDashboard({ data }) {
                   <th className="!py-2 !text-[10px]">Period</th>
                   <th className="!py-2 !text-[10px] text-right">Base</th>
                   <th className="!py-2 !text-[10px] text-right">Admin</th>
+                  <th className="!py-2 !text-[10px] text-right">Data</th>
+                  <th className="!py-2 !text-[10px] text-right">Price Prot.</th>
                   <th className="!py-2 !text-[10px] text-right">Total</th>
                   <th className="!py-2 !text-[10px]">Status</th>
                 </tr>
@@ -95,24 +97,26 @@ export default function ContractDashboard({ data }) {
                     <tr key={idx}>
                       <td className="!py-2">
                         <div>
-                          <p className="text-sm font-medium text-slate-800">{contract.payer}</p>
+                          <p className="text-xs font-medium text-slate-800">{contract.payer}</p>
                           {contract.notes && (
-                            <p className="text-[10px] text-slate-400 truncate max-w-[200px]" title={contract.notes}>
+                            <p className="text-[10px] text-slate-400 truncate max-w-[150px]" title={contract.notes}>
                               {contract.notes}
                             </p>
                           )}
                         </div>
                       </td>
-                      <td className="!py-2 text-xs text-slate-600">{contract.contractPeriod}</td>
-                      <td className="!py-2 text-xs text-right font-medium">{formatPercent(contract.baseRebate)}</td>
-                      <td className="!py-2 text-xs text-right">{formatPercent(contract.adminFee)}</td>
-                      <td className="!py-2 text-xs text-right font-semibold text-slate-800">
+                      <td className="!py-2 text-[11px] text-slate-600 whitespace-nowrap">{contract.contractPeriod}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(contract.baseRebate)}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(contract.adminFee)}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(contract.dataFee)}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(contract.priceProtection)}</td>
+                      <td className="!py-2 text-[11px] text-right font-semibold text-slate-800">
                         {formatPercent(contract.totalFees)}
                       </td>
                       <td className="!py-2">
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${getStatusColor(contract.status)}`}>
-                          <StatusIcon className="w-3 h-3" />
-                          {contract.status}
+                        <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-medium border ${getStatusColor(contract.status)}`}>
+                          <StatusIcon className="w-2.5 h-2.5" />
+                          <span className="hidden sm:inline">{contract.status}</span>
                         </span>
                       </td>
                     </tr>
@@ -131,35 +135,48 @@ export default function ContractDashboard({ data }) {
             <h3 className="text-base font-semibold text-slate-800">Rate Comparison</h3>
             <p className="text-xs text-slate-500">Total concessions by payer</p>
           </div>
-          <div className="card-body p-4">
-            <div className="space-y-2">
-              {data.rateComparison.map((rate, idx) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
-                  <div className="flex items-center gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-slate-700 truncate">{rate.payer}</p>
-                      <p className="text-[10px] text-slate-400">{rate.segment}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-slate-800">{formatPercent(rate.totalConcessions)}</p>
-                      <p className="text-[10px] text-slate-400">Total</p>
-                    </div>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${getStatusColor(rate.status)}`}>
-                      {rate.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="overflow-x-auto">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th className="!py-2 !text-[10px]">Payer</th>
+                  <th className="!py-2 !text-[10px]">Segment</th>
+                  <th className="!py-2 !text-[10px] text-right">Base</th>
+                  <th className="!py-2 !text-[10px] text-right">Admin</th>
+                  <th className="!py-2 !text-[10px] text-right">Data</th>
+                  <th className="!py-2 !text-[10px] text-right">Price Prot.</th>
+                  <th className="!py-2 !text-[10px] text-right">Total</th>
+                  <th className="!py-2 !text-[10px]">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.rateComparison.map((rate, idx) => (
+                  <tr key={idx}>
+                    <td className="!py-2 text-xs font-medium text-slate-800">{rate.payer}</td>
+                    <td className="!py-2 text-[11px] text-slate-600">{rate.segment}</td>
+                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.baseRebate)}</td>
+                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.adminFee)}</td>
+                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.dataFee)}</td>
+                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.priceProtection)}</td>
+                    <td className="!py-2 text-[11px] text-right font-semibold text-slate-800">
+                      {formatPercent(rate.totalConcessions)}
+                    </td>
+                    <td className="!py-2">
+                      <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium border ${getStatusColor(rate.status)}`}>
+                        {rate.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       )}
 
       {/* Last Updated */}
       {lastUpdated && (
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-slate-400 mt-4">
           Last updated: {lastUpdated}
         </p>
       )}
