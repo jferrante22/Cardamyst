@@ -57,7 +57,7 @@ export default function MetricCard({
           <span className={`text-xs font-medium ${
             change > 0 ? 'text-emerald-600' : change < 0 ? 'text-red-600' : 'text-slate-500'
           }`}>
-            {change > 0 ? '+' : ''}{change.toFixed(2)}%
+            {change > 0 ? '+' : ''}{change.toFixed(1)}%
           </span>
           {changeLabel && (
             <span className="text-xs text-slate-400">{changeLabel}</span>

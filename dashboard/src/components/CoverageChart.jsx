@@ -38,7 +38,7 @@ export default function CoverageChart({ data, title }) {
                 />
                 <span className="text-slate-600">{entry.name}:</span>
                 <span className="font-medium text-slate-800">
-                  {entry.value !== null ? entry.value.toFixed(3) + '%' : '—'}
+                  {entry.value !== null ? entry.value.toFixed(1) + '%' : '—'}
                 </span>
               </div>
             )

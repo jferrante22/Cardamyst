@@ -283,7 +283,7 @@ export function formatNumber(num, decimals = 0) {
 /**
  * Format percentage
  */
-export function formatPercent(value, decimals = 2) {
+export function formatPercent(value, decimals = 1) {
   if (value === null || value === undefined) return '—';
   return value.toFixed(decimals) + '%';
 }
