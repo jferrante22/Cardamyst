@@ -85,14 +85,16 @@ export default function ContractDashboard({ data }) {
                   <th className="!py-2 !text-[10px] text-right">Base</th>
                   <th className="!py-2 !text-[10px] text-right">Admin</th>
                   <th className="!py-2 !text-[10px] text-right">Data</th>
-                  <th className="!py-2 !text-[10px] text-right">Price Prot.</th>
-                  <th className="!py-2 !text-[10px] text-right">Total</th>
+                  <th className="!py-2 !text-[10px] text-right font-semibold">Total Fees</th>
+                  <th className="!py-2 !text-[10px] text-right text-slate-400 border-l border-slate-200">Price Cap</th>
                   <th className="!py-2 !text-[10px]">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {segmentContracts.map((contract, idx) => {
                   const StatusIcon = getStatusIcon(contract.status);
+                  // Calculate total fees (Base + Admin + Data only)
+                  const calculatedTotal = (contract.baseRebate || 0) + (contract.adminFee || 0) + (contract.dataFee || 0);
                   return (
                     <tr key={idx}>
                       <td className="!py-2">
@@ -109,9 +111,11 @@ export default function ContractDashboard({ data }) {
                       <td className="!py-2 text-[11px] text-right">{formatPercent(contract.baseRebate)}</td>
                       <td className="!py-2 text-[11px] text-right">{formatPercent(contract.adminFee)}</td>
                       <td className="!py-2 text-[11px] text-right">{formatPercent(contract.dataFee)}</td>
-                      <td className="!py-2 text-[11px] text-right">{formatPercent(contract.priceProtection)}</td>
                       <td className="!py-2 text-[11px] text-right font-semibold text-slate-800">
-                        {formatPercent(contract.totalFees)}
+                        {formatPercent(calculatedTotal)}
+                      </td>
+                      <td className="!py-2 text-[11px] text-right text-slate-500 border-l border-slate-100">
+                        {formatPercent(contract.priceProtection)}
                       </td>
                       <td className="!py-2">
                         <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-medium border ${getStatusColor(contract.status)}`}>
@@ -144,30 +148,36 @@ export default function ContractDashboard({ data }) {
                   <th className="!py-2 !text-[10px] text-right">Base</th>
                   <th className="!py-2 !text-[10px] text-right">Admin</th>
                   <th className="!py-2 !text-[10px] text-right">Data</th>
-                  <th className="!py-2 !text-[10px] text-right">Price Prot.</th>
-                  <th className="!py-2 !text-[10px] text-right">Total</th>
+                  <th className="!py-2 !text-[10px] text-right font-semibold">Total Fees</th>
+                  <th className="!py-2 !text-[10px] text-right text-slate-400 border-l border-slate-200">Price Cap</th>
                   <th className="!py-2 !text-[10px]">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {data.rateComparison.map((rate, idx) => (
-                  <tr key={idx}>
-                    <td className="!py-2 text-xs font-medium text-slate-800">{rate.payer}</td>
-                    <td className="!py-2 text-[11px] text-slate-600">{rate.segment}</td>
-                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.baseRebate)}</td>
-                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.adminFee)}</td>
-                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.dataFee)}</td>
-                    <td className="!py-2 text-[11px] text-right">{formatPercent(rate.priceProtection)}</td>
-                    <td className="!py-2 text-[11px] text-right font-semibold text-slate-800">
-                      {formatPercent(rate.totalConcessions)}
-                    </td>
-                    <td className="!py-2">
-                      <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium border ${getStatusColor(rate.status)}`}>
-                        {rate.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {data.rateComparison.map((rate, idx) => {
+                  // Calculate total fees (Base + Admin + Data only)
+                  const calculatedTotal = (rate.baseRebate || 0) + (rate.adminFee || 0) + (rate.dataFee || 0);
+                  return (
+                    <tr key={idx}>
+                      <td className="!py-2 text-xs font-medium text-slate-800">{rate.payer}</td>
+                      <td className="!py-2 text-[11px] text-slate-600">{rate.segment}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(rate.baseRebate)}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(rate.adminFee)}</td>
+                      <td className="!py-2 text-[11px] text-right">{formatPercent(rate.dataFee)}</td>
+                      <td className="!py-2 text-[11px] text-right font-semibold text-slate-800">
+                        {formatPercent(calculatedTotal)}
+                      </td>
+                      <td className="!py-2 text-[11px] text-right text-slate-500 border-l border-slate-100">
+                        {formatPercent(rate.priceProtection)}
+                      </td>
+                      <td className="!py-2">
+                        <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium border ${getStatusColor(rate.status)}`}>
+                          {rate.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
