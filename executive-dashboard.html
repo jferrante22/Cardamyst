@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardamyst Executive Dashboard - Lives Coverage</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .header .report-date {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .metric-card.commercial::before {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+
+        .metric-card.medicare::before {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        }
+
+        .metric-card.medicaid::before {
+            background: linear-gradient(90deg, #fa709a, #fee140);
+        }
+
+        .metric-label {
+            font-size: 0.85em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .metric-secondary {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .metric-percent {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        .top-plans {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .top-plans h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .plan-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .plan-item:hover {
+            background: #f8f9ff;
+        }
+
+        .plan-item:last-child {
+            border-bottom: none;
+        }
+
+        .plan-info {
+            flex: 1;
+        }
+
+        .plan-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .plan-type {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .plan-lives {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #667eea;
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: #e0e7ff;
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header .subtitle {
+                font-size: 1em;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 2em;
+            }
+
+            .chart-wrapper {
+                height: 300px;
+            }
+
+            .plan-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .plan-lives {
+                text-align: left;
+                margin-top: 8px;
+            }
+
+            body {
+                padding: 10px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cardamyst Executive Dashboard</h1>
+            <div class="subtitle">Lives Coverage Tracker</div>
+            <div class="report-date" id="reportDate">Loading...</div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card commercial">
+                <div class="metric-label">Commercial Lives</div>
+                <div class="metric-value" id="commercialLives">-</div>
+                <div class="metric-percent" id="commercialPercent">-</div>
+                <div class="metric-secondary" id="commercialTotal">-</div>
+            </div>
+
+            <div class="metric-card medicare">
+                <div class="metric-label">Medicare Lives</div>
+                <div class="metric-value" id="medicareLives">-</div>
+                <div class="metric-percent" id="medicarePercent">-</div>
+                <div class="metric-secondary" id="medicareTotal">-</div>
+            </div>
+
+            <div class="metric-card medicaid">
+                <div class="metric-label">Medicaid Lives</div>
+                <div class="metric-value" id="medicaidLives">-</div>
+                <div class="metric-percent" id="medicaidPercent">-</div>
+                <div class="metric-secondary" id="medicaidTotal">-</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Total Coverage</div>
+                <div class="metric-value" id="totalLives">-</div>
+                <div class="metric-percent" id="totalPercent">-</div>
+                <div class="metric-secondary" id="totalMarket">-</div>
+            </div>
+        </div>
+
+        <div class="two-column">
+            <div class="chart-container">
+                <div class="chart-title">Commercial: Progress vs Forecast</div>
+                <div class="chart-wrapper">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Coverage by Channel</div>
+                <div class="chart-wrapper">
+                    <canvas id="channelChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-plans">
+            <h2>Top 10 Plans by Covered Lives</h2>
+            <div id="topPlansList">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard data embedded
+        const dashboardData = {
+  "report_date": "January 2026",
+  "last_updated": "2026-01-24T15:17:09.630410",
+  "coverage_snapshot": {
+    "commercial": {
+      "total_lives": 186512403,
+      "covered_lives": 6816075,
+      "coverage_percent": 3.65,
+      "notes": "Employer, PBM, HIX, FEHBP, VA, TRICARE"
+    },
+    "federal_programs": {
+      "total_lives": 15711264,
+      "covered_lives": 5749433,
+      "coverage_percent": 36.59,
+      "notes": "TRICARE, VA (subset of Commercial)"
+    },
+    "medicare": {
+      "total_lives": 53706458,
+      "covered_lives": 0,
+      "coverage_percent": 0,
+      "notes": "Part D, MA, SNP, EGWP, PACE"
+    },
+    "medicaid": {
+      "total_lives": 76473937,
+      "covered_lives": 0,
+      "coverage_percent": 0,
+      "notes": "State, Managed, CHIP"
+    },
+    "total": {
+      "total_lives": 316692798,
+      "covered_lives": 6816075,
+      "coverage_percent": 2.15
+    }
+  },
+  "top_plans": [
+    {
+      "name": "TRICARE Uniform Formulary",
+      "type": "Fed Prog",
+      "covered_lives": 5749433,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "CHI Franciscan",
+      "type": "Employer",
+      "covered_lives": 217484,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "MGM Resorts International",
+      "type": "Employer",
+      "covered_lives": 183545,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "General Electric",
+      "type": "Employer",
+      "covered_lives": 118127,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Apple",
+      "type": "Employer",
+      "covered_lives": 106071,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "State of Ohio",
+      "type": "Employer",
+      "covered_lives": 105276,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "State of Michigan",
+      "type": "Employer",
+      "covered_lives": 91117,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Weis Markets",
+      "type": "Employer",
+      "covered_lives": 41806,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Smithfield Foods",
+      "type": "Employer",
+      "covered_lives": 21372,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Milwaukee Public Schools",
+      "type": "Employer",
+      "covered_lives": 20367,
+      "status": "(T3) Non-Preferred"
+    }
+  ],
+  "monthly_forecast": {
+    "commercial": {
+      "months": [
+        "Jan-26",
+        "Feb-26",
+        "Mar-26",
+        "Apr-26",
+        "May-26",
+        "Jun-26",
+        "Jul-26",
+        "Aug-26",
+        "Sep-26",
+        "Oct-26",
+        "Nov-26",
+        "Dec-26",
+        "Jan-27",
+        "Feb-27",
+        "Mar-27"
+      ],
+      "forecast": [
+        0.0,
+        0.0,
+        0.0,
+        6.0,
+        11.0,
+        28.999999999999996,
+        44.0,
+        52.0,
+        57.99999999999999,
+        57.99999999999999,
+        57.99999999999999,
+        57.99999999999999,
+        71.0,
+        83.0,
+        84.0
+      ],
+      "actual": [
+        3.6544890471871496,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+};
+
+        // Format numbers with commas
+        function formatNumber(num) {
+            return num.toLocaleString('en-US');
+        }
+
+        // Update metrics
+        function updateMetrics() {
+            const data = dashboardData.coverage_snapshot;
+
+            // Commercial
+            document.getElementById('commercialLives').textContent = formatNumber(data.commercial.covered_lives);
+            document.getElementById('commercialPercent').textContent = `${data.commercial.coverage_percent}% Coverage`;
+            document.getElementById('commercialTotal').textContent = `of ${formatNumber(data.commercial.total_lives)} total lives`;
+
+            // Medicare
+            document.getElementById('medicareLives').textContent = formatNumber(data.medicare.covered_lives);
+            document.getElementById('medicarePercent').textContent = `${data.medicare.coverage_percent}% Coverage`;
+            document.getElementById('medicareTotal').textContent = `of ${formatNumber(data.medicare.total_lives)} total lives`;
+
+            // Medicaid
+            document.getElementById('medicaidLives').textContent = formatNumber(data.medicaid.covered_lives);
+            document.getElementById('medicaidPercent').textContent = `${data.medicaid.coverage_percent}% Coverage`;
+            document.getElementById('medicaidTotal').textContent = `of ${formatNumber(data.medicaid.total_lives)} total lives`;
+
+            // Total
+            document.getElementById('totalLives').textContent = formatNumber(data.total.covered_lives);
+            document.getElementById('totalPercent').textContent = `${data.total.coverage_percent}% Coverage`;
+            document.getElementById('totalMarket').textContent = `of ${formatNumber(data.total.total_lives)} total lives`;
+
+            // Report date
+            document.getElementById('reportDate').textContent = `Report Date: ${dashboardData.report_date}`;
+        }
+
+        // Create forecast chart
+        function createForecastChart() {
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            const forecast = dashboardData.monthly_forecast.commercial;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: forecast.months,
+                    datasets: [
+                        {
+                            label: 'Forecast',
+                            data: forecast.forecast,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Actual',
+                            data: forecast.actual,
+                            borderColor: '#00f2fe',
+                            backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 11
+                                },
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create channel coverage chart
+        function createChannelChart() {
+            const ctx = document.getElementById('channelChart').getContext('2d');
+            const data = dashboardData.coverage_snapshot;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Commercial', 'Medicare', 'Medicaid'],
+                    datasets: [{
+                        data: [
+                            data.commercial.covered_lives,
+                            data.medicare.covered_lives,
+                            data.medicaid.covered_lives
+                        ],
+                        backgroundColor: [
+                            'rgba(79, 172, 254, 0.8)',
+                            'rgba(67, 233, 123, 0.8)',
+                            'rgba(250, 112, 154, 0.8)'
+                        ],
+                        borderColor: [
+                            '#4facfe',
+                            '#43e97b',
+                            '#fa709a'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = formatNumber(context.parsed);
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render top plans
+        function renderTopPlans() {
+            const container = document.getElementById('topPlansList');
+            const plans = dashboardData.top_plans;
+
+            container.innerHTML = plans.map(plan => `
+                <div class="plan-item">
+                    <div class="plan-info">
+                        <div class="plan-name">${plan.name}</div>
+                        <div class="plan-type">${plan.type}<span class="badge">${plan.status}</span></div>
+                    </div>
+                    <div class="plan-lives">${formatNumber(plan.covered_lives)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMetrics();
+            createForecastChart();
+            createChannelChart();
+            renderTopPlans();
+        });
+    </script>
+</body>
+</html>

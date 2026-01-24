@@ -1,0 +1,152 @@
+{
+  "report_date": "January 2026",
+  "last_updated": "2026-01-24T15:17:09.630410",
+  "coverage_snapshot": {
+    "commercial": {
+      "total_lives": 186512403,
+      "covered_lives": 6816075,
+      "coverage_percent": 3.65,
+      "notes": "Employer, PBM, HIX, FEHBP, VA, TRICARE"
+    },
+    "federal_programs": {
+      "total_lives": 15711264,
+      "covered_lives": 5749433,
+      "coverage_percent": 36.59,
+      "notes": "TRICARE, VA (subset of Commercial)"
+    },
+    "medicare": {
+      "total_lives": 53706458,
+      "covered_lives": 0,
+      "coverage_percent": 0,
+      "notes": "Part D, MA, SNP, EGWP, PACE"
+    },
+    "medicaid": {
+      "total_lives": 76473937,
+      "covered_lives": 0,
+      "coverage_percent": 0,
+      "notes": "State, Managed, CHIP"
+    },
+    "total": {
+      "total_lives": 316692798,
+      "covered_lives": 6816075,
+      "coverage_percent": 2.15
+    }
+  },
+  "top_plans": [
+    {
+      "name": "TRICARE Uniform Formulary",
+      "type": "Fed Prog",
+      "covered_lives": 5749433,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "CHI Franciscan",
+      "type": "Employer",
+      "covered_lives": 217484,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "MGM Resorts International",
+      "type": "Employer",
+      "covered_lives": 183545,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "General Electric",
+      "type": "Employer",
+      "covered_lives": 118127,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Apple",
+      "type": "Employer",
+      "covered_lives": 106071,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "State of Ohio",
+      "type": "Employer",
+      "covered_lives": 105276,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "State of Michigan",
+      "type": "Employer",
+      "covered_lives": 91117,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Weis Markets",
+      "type": "Employer",
+      "covered_lives": 41806,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Smithfield Foods",
+      "type": "Employer",
+      "covered_lives": 21372,
+      "status": "(T3) Non-Preferred"
+    },
+    {
+      "name": "Milwaukee Public Schools",
+      "type": "Employer",
+      "covered_lives": 20367,
+      "status": "(T3) Non-Preferred"
+    }
+  ],
+  "monthly_forecast": {
+    "commercial": {
+      "months": [
+        "Jan-26",
+        "Feb-26",
+        "Mar-26",
+        "Apr-26",
+        "May-26",
+        "Jun-26",
+        "Jul-26",
+        "Aug-26",
+        "Sep-26",
+        "Oct-26",
+        "Nov-26",
+        "Dec-26",
+        "Jan-27",
+        "Feb-27",
+        "Mar-27"
+      ],
+      "forecast": [
+        0.0,
+        0.0,
+        0.0,
+        6.0,
+        11.0,
+        28.999999999999996,
+        44.0,
+        52.0,
+        57.99999999999999,
+        57.99999999999999,
+        57.99999999999999,
+        57.99999999999999,
+        71.0,
+        83.0,
+        84.0
+      ],
+      "actual": [
+        3.6544890471871496,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}
