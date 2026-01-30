@@ -2,17 +2,14 @@
 """
 Complete Dashboard Builder
 Generates the full Cardamyst Market Access Dashboard with:
-- Actual Cardamyst logo from PowerPoint template
-- Formulary Coverage section
+- Cardamyst SVG logo
+- Formulary Coverage section with bento box design
 - Commercial Coverage chart
 - Copay metrics cards (eVoucher, UBC, Denial Conversion, PriorAuth Plus)
+- Hover animations on all cards
 """
 
 import json
-
-# Load logo
-with open('logo_base64.txt', 'r') as f:
-    logo_b64 = f.readlines()[1].strip()
 
 # Load dashboard data
 with open('dashboard_data.json', 'r') as f:
@@ -41,18 +38,23 @@ html = f'''<!DOCTYPE html>
         .container {{ max-width: 1400px; margin: 0 auto; }}
 
         /* Header */
-        .header {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }}
+        .header {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s ease, box-shadow 0.2s ease; }}
+        .header:hover {{ transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }}
         .header h1 {{ color: #1E3A5F; font-size: 2em; font-weight: 600; margin-bottom: 5px; }}
         .header .subtitle {{ color: #6B7280; font-size: 0.95em; }}
-        .logo-img {{ height: 50px; }}
+
+        /* SVG Logo */
+        .logo-svg {{ width: 50px; height: 50px; }}
 
         /* Section */
-        .section {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; }}
+        .section {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; transition: transform 0.2s ease, box-shadow 0.2s ease; }}
+        .section:hover {{ transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }}
         .section-title {{ font-size: 1.4em; font-weight: 600; color: #1E3A5F; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #00B8D4; }}
 
         /* Coverage Cards */
         .coverage-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }}
-        .coverage-card {{ background: #E8F4F8; padding: 30px; border-radius: 8px; text-align: center; }}
+        .coverage-card {{ background: #E8F4F8; padding: 30px; border-radius: 8px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }}
+        .coverage-card:hover {{ transform: translateY(-4px); box-shadow: 0 4px 16px rgba(0,184,212,0.15); }}
         .coverage-label {{ font-size: 0.8em; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: 600; }}
         .coverage-percent {{ font-size: 3em; font-weight: 700; color: #1E3A5F; line-height: 1; margin-bottom: 10px; }}
         .coverage-details {{ font-size: 0.95em; color: #00B8D4; font-weight: 500; }}
@@ -67,12 +69,14 @@ html = f'''<!DOCTYPE html>
         .status-badge {{ display: inline-block; padding: 6px 16px; background: #D91E7A; color: white; border-radius: 20px; font-size: 0.85em; font-weight: 600; }}
 
         /* Chart */
-        .chart-container {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; }}
+        .chart-container {{ background: white; padding: 35px 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; transition: transform 0.2s ease, box-shadow 0.2s ease; }}
+        .chart-container:hover {{ transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }}
         .chart-wrapper {{ position: relative; height: 400px; margin-top: 20px; }}
 
         /* Copay Cards Grid */
         .copay-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 25px; }}
-        .copay-card {{ padding: 30px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }}
+        .copay-card {{ padding: 30px; border-radius: 12px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }}
+        .copay-card:hover {{ transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }}
         .copay-card h3 {{ font-size: 1.3em; font-weight: 600; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px; }}
         .copay-metrics {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }}
         .copay-metric {{ background: rgba(255,255,255,0.15); padding: 20px; border-radius: 8px; }}
@@ -101,7 +105,11 @@ html = f'''<!DOCTYPE html>
                 <h1>Market Access Dashboard</h1>
                 <div class="subtitle">As of January 2026</div>
             </div>
-            <img src="data:image/png;base64,{logo_b64}" alt="Cardamyst" class="logo-img">
+            <svg class="logo-svg" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="25" cy="25" r="23" fill="none" stroke="#00B8D4" stroke-width="2"/>
+                <path d="M 15 25 Q 25 10, 35 25" fill="none" stroke="#D91E7A" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="25" cy="30" r="3" fill="#1E3A5F"/>
+            </svg>
         </div>
 
         <div class="section">
