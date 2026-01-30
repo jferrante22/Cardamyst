@@ -576,32 +576,87 @@
     </div>
 
     <script>
+        // ============================================================
+        // DASHBOARD DATA - Update this section when new files are uploaded
+        // ============================================================
+        const DASHBOARD_DATA = {
+            // Last updated date (shown in header)
+            lastUpdated: 'January 2026',
+
+            // Formulary Coverage Data (from Fingertip file)
+            coverage: {
+                commercial: { percentage: 3.8, covered: 7.0, total: 187.2 },  // millions
+                medicare:   { percentage: 0,   covered: 0,   total: 54.3 },   // millions
+                medicaid:   { percentage: 0,   covered: 0,   total: 73.3 }    // millions
+            },
+
+            // Actual monthly coverage data (from Fingertip files)
+            // Add new entries as data becomes available: { month: 'Mon-YY', value: X.X }
+            actualCoverage: [
+                { month: 'Jan-26', value: 3.8 }  // January 2026 from current Fingertip
+                // Add future months here as data is uploaded:
+                // { month: 'Feb-26', value: X.X },
+                // { month: 'Mar-26', value: X.X },
+            ],
+
+            // Forecast data points (projected coverage %)
+            forecast: [
+                { month: 'Jan-25', value: 0 },
+                { month: 'Feb-25', value: 0 },
+                { month: 'Mar-25', value: 0.5 },
+                { month: 'Apr-25', value: 1 },
+                { month: 'May-25', value: 2 },
+                { month: 'Jun-25', value: 4 },
+                { month: 'Jul-25', value: 7 },
+                { month: 'Aug-25', value: 12 },
+                { month: 'Sep-25', value: 18 },
+                { month: 'Oct-25', value: 25 },
+                { month: 'Nov-25', value: 33 },
+                { month: 'Dec-25', value: 42 },
+                { month: 'Jan-26', value: 50 },
+                { month: 'Feb-26', value: 55 },
+                { month: 'Mar-26', value: 60 },
+                { month: 'Apr-26', value: 64 },
+                { month: 'May-26', value: 68 },
+                { month: 'Jun-26', value: 71 },
+                { month: 'Jul-26', value: 74 },
+                { month: 'Aug-26', value: 76 },
+                { month: 'Sep-26', value: 78 },
+                { month: 'Oct-26', value: 80 },
+                { month: 'Nov-26', value: 81 },
+                { month: 'Dec-26', value: 82 },
+                { month: 'Jan-27', value: 83 },
+                { month: 'Feb-27', value: 84 }
+            ],
+
+            // Top covered plans (from Fingertip file)
+            plans: [
+                { name: 'TRICARE Uniform Formulary', type: 'Federal', lives: 5879432, status: '(T3) Non-Preferred' },
+                { name: 'MGM Resorts International', type: 'Employer', lives: 185337, status: '(T3) Non-Preferred' },
+                { name: 'UnitedHealthcare Community Plan Essential', type: 'HIX-Medicaid', lives: 174217, status: '(T3) Non-Preferred' },
+                { name: 'CHI Franciscan', type: 'Employer', lives: 135877, status: '(T3) Non-Preferred' },
+                { name: 'Apple', type: 'Employer', lives: 118347, status: '(T3) Non-Preferred' }
+            ]
+        };
+        // ============================================================
+        // END DASHBOARD DATA
+        // ============================================================
+
         // Coverage Chart
         const ctx = document.getElementById('coverageChart').getContext('2d');
 
-        // Generate monthly labels from Jan 2025 to Feb 2027
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const labels = [];
-        for (let year = 25; year <= 27; year++) {
-            const endMonth = year === 27 ? 2 : 12;
-            for (let m = (year === 25 ? 0 : 0); m < endMonth; m++) {
-                labels.push(`${months[m]}-${year}`);
-            }
-        }
+        // Get labels from forecast data
+        const labels = DASHBOARD_DATA.forecast.map(d => d.month);
+        const forecastData = DASHBOARD_DATA.forecast.map(d => d.value);
 
-        // Forecast data - S-curve growth from ~5% to ~85%
-        const forecastData = labels.map((_, i) => {
-            const x = (i - 6) / 8;
-            return 5 + 80 / (1 + Math.exp(-x));
+        // Build actual data array - null for months without data
+        const actualDataMap = {};
+        DASHBOARD_DATA.actualCoverage.forEach(d => {
+            actualDataMap[d.month] = d.value;
         });
 
-        // Actual data - only up to current month (Jan 2026 = index 12)
-        const actualData = labels.map((_, i) => {
-            if (i > 12) return null;
-            // Actual slightly trails forecast
-            const x = (i - 6) / 8;
-            const base = 3 + 75 / (1 + Math.exp(-x));
-            return i <= 12 ? base + (Math.random() * 4 - 2) : null;
+        const actualData = labels.map(month => {
+            return actualDataMap[month] !== undefined ? actualDataMap[month] : null;
         });
 
         new Chart(ctx, {
@@ -617,7 +672,8 @@
                         borderWidth: 2,
                         fill: false,
                         tension: 0.4,
-                        pointRadius: 0
+                        pointRadius: 0,
+                        pointHoverRadius: 4
                     },
                     {
                         label: 'Actual',
@@ -626,8 +682,16 @@
                         backgroundColor: '#0ea5e9',
                         borderWidth: 3,
                         fill: false,
-                        tension: 0.4,
-                        pointRadius: 0
+                        tension: 0,
+                        pointRadius: function(context) {
+                            // Show point only for actual data points
+                            return context.raw !== null ? 6 : 0;
+                        },
+                        pointBackgroundColor: '#0ea5e9',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8,
+                        spanGaps: false
                     }
                 ]
             },
@@ -643,6 +707,9 @@
                         display: false
                     },
                     tooltip: {
+                        filter: function(tooltipItem) {
+                            return tooltipItem.raw !== null;
+                        },
                         callbacks: {
                             label: function(context) {
                                 return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
@@ -681,6 +748,40 @@
                 }
             }
         });
+
+        // Update DOM with data from DASHBOARD_DATA
+        function updateDashboard() {
+            // Update header date
+            document.querySelector('.header-title .date').textContent = 'As of ' + DASHBOARD_DATA.lastUpdated;
+
+            // Update coverage cards
+            const cards = document.querySelectorAll('.metric-card');
+            const coverageTypes = ['commercial', 'medicare', 'medicaid'];
+            coverageTypes.forEach((type, i) => {
+                const data = DASHBOARD_DATA.coverage[type];
+                const card = cards[i];
+                card.querySelector('.metric-value').innerHTML = data.percentage + '<span class="percent">%</span>';
+                card.querySelector('.metric-subtext').textContent =
+                    data.covered + 'M / ' + data.total + 'M covered';
+            });
+
+            // Update plans table
+            const tbody = document.querySelector('.data-table tbody');
+            tbody.innerHTML = '';
+            DASHBOARD_DATA.plans.forEach(plan => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${plan.name}</td>
+                    <td>${plan.type}</td>
+                    <td>${plan.lives.toLocaleString()}</td>
+                    <td><span class="status-badge">${plan.status}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Initialize dashboard
+        updateDashboard();
 
         // UBC Mini Bar Chart
         const ubcCtx = document.getElementById('ubcChart').getContext('2d');
