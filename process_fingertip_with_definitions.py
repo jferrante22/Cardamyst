@@ -27,20 +27,27 @@ print()
 def should_count_as_covered(formulary_status):
     """
     Check if a formulary status should be counted as covered.
+
+    RULES:
+    - COUNT: Any tier placement (T1), (T2), (T3), (T4), (T5), etc. with any modifiers (PA, QL, etc.)
+    - EXCLUDE: Any status starting with (NC) or (N/A)
+
     Returns: (should_count: bool, matched_rule: str or None)
     """
     if not formulary_status or formulary_status == '':
-        return False, None
+        return False, 'Empty status'
 
-    # Check exact matches first
-    if formulary_status in coverage_rules:
-        return coverage_rules[formulary_status], formulary_status
-
-    # Check partial matches (for cases where status might have extra spaces)
     status_clean = formulary_status.strip()
-    for rule_status, should_count in coverage_rules.items():
-        if status_clean.startswith(rule_status):
-            return should_count, rule_status
+
+    # EXCLUDE: Not Covered or Not Applicable
+    if status_clean.startswith('(NC)') or status_clean.startswith('(N/A)'):
+        return False, 'NC/N/A - Excluded'
+
+    # COUNT: Any tier placement (T1, T2, T3, T4, T5, etc.)
+    # Check for pattern like (T followed by a number)
+    import re
+    if re.search(r'\(T\d+\)', status_clean):
+        return True, 'Tier placement - Counted'
 
     # Unknown status - return False and the status for prompting
     return False, None

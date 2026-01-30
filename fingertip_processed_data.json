@@ -5,14 +5,14 @@
   "coverage_snapshot": {
     "commercial": {
       "total_lives": 187209834,
-      "covered_lives": 0,
-      "coverage_percent": 0.0,
+      "covered_lives": 7034139,
+      "coverage_percent": 3.76,
       "notes": "Employer, PBM, HIX, FEHBP, VA, TRICARE"
     },
     "federal_programs": {
       "total_lives": 15636175,
-      "covered_lives": 0,
-      "coverage_percent": 0.0,
+      "covered_lives": 5879432,
+      "coverage_percent": 37.6,
       "notes": "TRICARE, VA (subset of Commercial)"
     },
     "medicare": {
@@ -29,46 +29,71 @@
     },
     "total": {
       "total_lives": 314775891,
-      "covered_lives": 0,
-      "coverage_percent": 0.0
+      "covered_lives": 7034139,
+      "coverage_percent": 2.23
     }
   },
-  "top_plans": [],
-  "unknown_statuses": {
-    "(N/A) ": {
-      "count": 4525,
-      "total_lives": 293648107.2441463,
-      "example_plan": "Medi-Cal"
+  "top_plans": [
+    {
+      "name": "TRICARE Uniform Formulary",
+      "type": "Fed Prog",
+      "covered_lives": 5879432,
+      "status": "(T3)"
     },
-    "(T3) ": {
-      "count": 30,
-      "total_lives": 6858765.350185246,
-      "example_plan": "TRICARE Uniform Formulary"
+    {
+      "name": "MGM Resorts International",
+      "type": "Employer",
+      "covered_lives": 185337,
+      "status": "(T3)"
     },
-    "(NC) ": {
-      "count": 281,
-      "total_lives": 9062554.982450042,
-      "example_plan": "BlueCross BlueShield Massachusetts Standard 3-tier"
+    {
+      "name": "UnitedHealthcare Community Plan Essential",
+      "type": "HIX-Medicaid",
+      "covered_lives": 174217,
+      "status": "(T3)  (PA)"
     },
-    "(NC)  (PA)": {
-      "count": 47,
-      "total_lives": 4972953,
-      "example_plan": "Molina Healthcare Washington"
+    {
+      "name": "CHI Franciscan",
+      "type": "Employer",
+      "covered_lives": 135877,
+      "status": "(T3)"
     },
-    "(T3)  (PA)": {
-      "count": 1,
-      "total_lives": 174217,
-      "example_plan": "UnitedHealthcare Community Plan Essential"
+    {
+      "name": "Apple",
+      "type": "Employer",
+      "covered_lives": 118347,
+      "status": "(T3)"
     },
-    "(N/A)  (PA)": {
-      "count": 1,
-      "total_lives": 58137,
-      "example_plan": "Utah State Medicaid"
+    {
+      "name": "State of Ohio",
+      "type": "Employer",
+      "covered_lives": 105536,
+      "status": "(T3)"
     },
-    "(T4)  (QL)": {
-      "count": 1,
-      "total_lives": 1157,
-      "example_plan": "Wellmark Blue Rx Preferred"
+    {
+      "name": "General Electric",
+      "type": "Employer",
+      "covered_lives": 98194,
+      "status": "(T3)"
+    },
+    {
+      "name": "State of Michigan",
+      "type": "Employer",
+      "covered_lives": 95690,
+      "status": "(T3)"
+    },
+    {
+      "name": "Weis Markets",
+      "type": "Employer",
+      "covered_lives": 40010,
+      "status": "(T3)"
+    },
+    {
+      "name": "Smithfield Foods",
+      "type": "Employer",
+      "covered_lives": 23040,
+      "status": "(T3)"
     }
-  }
+  ],
+  "unknown_statuses": {}
 }
