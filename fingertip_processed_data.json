@@ -1,17 +1,18 @@
 {
   "report_date": "January 2026",
   "data_source": "January Fingertip 01.30.xlsx",
+  "processing_note": "Coverage rules applied from Definitions sheet - only T3/T4 counted",
   "coverage_snapshot": {
     "commercial": {
       "total_lives": 187209834,
-      "covered_lives": 16150884,
-      "coverage_percent": 8.63,
+      "covered_lives": 0,
+      "coverage_percent": 0.0,
       "notes": "Employer, PBM, HIX, FEHBP, VA, TRICARE"
     },
     "federal_programs": {
       "total_lives": 15636175,
-      "covered_lives": 5879432,
-      "coverage_percent": 37.6,
+      "covered_lives": 0,
+      "coverage_percent": 0.0,
       "notes": "TRICARE, VA (subset of Commercial)"
     },
     "medicare": {
@@ -22,76 +23,52 @@
     },
     "medicaid": {
       "total_lives": 73287278,
-      "covered_lives": 4918763,
-      "coverage_percent": 6.71,
+      "covered_lives": 0,
+      "coverage_percent": 0.0,
       "notes": "State, Managed, CHIP"
     },
     "total": {
       "total_lives": 314775891,
-      "covered_lives": 21069647,
-      "coverage_percent": 6.69
+      "covered_lives": 0,
+      "coverage_percent": 0.0
     }
   },
-  "top_plans": [
-    {
-      "name": "TRICARE Uniform Formulary",
-      "type": "Fed Prog",
-      "covered_lives": 5879432,
-      "status": "(T3)"
+  "top_plans": [],
+  "unknown_statuses": {
+    "(N/A) ": {
+      "count": 4525,
+      "total_lives": 293648107.2441463,
+      "example_plan": "Medi-Cal"
     },
-    {
-      "name": "BlueCross BlueShield Massachusetts Standard 3-tier",
-      "type": "Commercial",
-      "covered_lives": 1004502,
-      "status": "(NC)"
+    "(T3) ": {
+      "count": 30,
+      "total_lives": 6858765.350185246,
+      "example_plan": "TRICARE Uniform Formulary"
     },
-    {
-      "name": "Molina Healthcare Washington",
-      "type": "Managed Medicaid",
-      "covered_lives": 772439,
-      "status": "(NC)  (PA)"
+    "(NC) ": {
+      "count": 281,
+      "total_lives": 9062554.982450042,
+      "example_plan": "BlueCross BlueShield Massachusetts Standard 3-tier"
     },
-    {
-      "name": "Florida Blue Open",
-      "type": "Commercial",
-      "covered_lives": 761441,
-      "status": "(NC)"
+    "(NC)  (PA)": {
+      "count": 47,
+      "total_lives": 4972953,
+      "example_plan": "Molina Healthcare Washington"
     },
-    {
-      "name": "Florida Blue Care Choices 7-Tier Silver",
-      "type": "HIX",
-      "covered_lives": 746709,
-      "status": "(NC)"
+    "(T3)  (PA)": {
+      "count": 1,
+      "total_lives": 174217,
+      "example_plan": "UnitedHealthcare Community Plan Essential"
     },
-    {
-      "name": "Blue Cross Community Health Plan",
-      "type": "Managed Medicaid",
-      "covered_lives": 686327,
-      "status": "(NC)  (PA)"
+    "(N/A)  (PA)": {
+      "count": 1,
+      "total_lives": 58137,
+      "example_plan": "Utah State Medicaid"
     },
-    {
-      "name": "Cigna Performance 3-Tier",
-      "type": "Commercial",
-      "covered_lives": 629275,
-      "status": "(NC)"
-    },
-    {
-      "name": "BlueCross BlueShield MN Medicaid",
-      "type": "Managed Medicaid",
-      "covered_lives": 364591,
-      "status": "(NC)  (PA)"
-    },
-    {
-      "name": "Florida Blue Care Choices 7-Tier Bronze",
-      "type": "HIX",
-      "covered_lives": 363097,
-      "status": "(NC)"
-    },
-    {
-      "name": "CareSource (GA)",
-      "type": "Managed Medicaid",
-      "covered_lives": 306599,
-      "status": "(NC)  (PA)"
+    "(T4)  (QL)": {
+      "count": 1,
+      "total_lives": 1157,
+      "example_plan": "Wellmark Blue Rx Preferred"
     }
-  ]
+  }
 }
