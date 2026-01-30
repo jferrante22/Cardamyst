@@ -18,6 +18,15 @@ with open('logo_base64.txt', 'r') as f:
 with open('dashboard_data.json', 'r') as f:
     data = json.load(f)
 
+# Convert 0.0 actual values to null for chart (don't show points for months without data)
+actual_data = []
+for val in data['monthly_forecast']['commercial']['actual']:
+    if val == 0.0:
+        actual_data.append(None)
+    else:
+        actual_data.append(val)
+data['monthly_forecast']['commercial']['actual'] = actual_data
+
 # Build complete HTML
 html = f'''<!DOCTYPE html>
 <html lang="en">
