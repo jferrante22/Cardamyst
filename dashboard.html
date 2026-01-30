@@ -583,59 +583,47 @@
             // Last updated date (shown in header)
             lastUpdated: 'January 2026',
 
-            // Formulary Coverage Data (from Fingertip file)
+            // Formulary Coverage Data (from Coverage Tracker Executive Summary)
             coverage: {
-                commercial: { percentage: 3.8, covered: 7.0, total: 187.2 },  // millions
-                medicare:   { percentage: 0,   covered: 0,   total: 54.3 },   // millions
-                medicaid:   { percentage: 0,   covered: 0,   total: 73.3 }    // millions
+                commercial: { percentage: 3.7, covered: 6.8, total: 186.5 },  // millions
+                medicare:   { percentage: 0,   covered: 0,   total: 53.7 },   // millions
+                medicaid:   { percentage: 0,   covered: 0,   total: 76.5 }    // millions
             },
 
-            // Actual monthly coverage data (from Fingertip files)
-            // Add new entries as data becomes available: { month: 'Mon-YY', value: X.X }
+            // Actual monthly coverage data (from Coverage Tracker)
+            // Add new entries as data becomes available
             actualCoverage: [
-                { month: 'Jan-26', value: 3.8 }  // January 2026 from current Fingertip
-                // Add future months here as data is uploaded:
-                // { month: 'Feb-26', value: X.X },
-                // { month: 'Mar-26', value: X.X },
+                { month: 'Jan-26', value: 3.65 }  // 0.036545 from Coverage Tracker
+                // Add future months here as data is uploaded
             ],
 
-            // Forecast data points (projected coverage %)
+            // Forecast data (from Coverage Tracker - Charts sheet)
+            // Values are percentages (0.06 in Excel = 6%)
             forecast: [
-                { month: 'Jan-25', value: 0 },
-                { month: 'Feb-25', value: 0 },
-                { month: 'Mar-25', value: 0.5 },
-                { month: 'Apr-25', value: 1 },
-                { month: 'May-25', value: 2 },
-                { month: 'Jun-25', value: 4 },
-                { month: 'Jul-25', value: 7 },
-                { month: 'Aug-25', value: 12 },
-                { month: 'Sep-25', value: 18 },
-                { month: 'Oct-25', value: 25 },
-                { month: 'Nov-25', value: 33 },
-                { month: 'Dec-25', value: 42 },
-                { month: 'Jan-26', value: 50 },
-                { month: 'Feb-26', value: 55 },
-                { month: 'Mar-26', value: 60 },
-                { month: 'Apr-26', value: 64 },
-                { month: 'May-26', value: 68 },
-                { month: 'Jun-26', value: 71 },
-                { month: 'Jul-26', value: 74 },
-                { month: 'Aug-26', value: 76 },
-                { month: 'Sep-26', value: 78 },
-                { month: 'Oct-26', value: 80 },
-                { month: 'Nov-26', value: 81 },
-                { month: 'Dec-26', value: 82 },
-                { month: 'Jan-27', value: 83 },
-                { month: 'Feb-27', value: 84 }
+                { month: 'Jan-26', value: 0 },
+                { month: 'Feb-26', value: 0 },
+                { month: 'Mar-26', value: 0 },
+                { month: 'Apr-26', value: 6 },
+                { month: 'May-26', value: 11 },
+                { month: 'Jun-26', value: 29 },
+                { month: 'Jul-26', value: 44 },
+                { month: 'Aug-26', value: 52 },
+                { month: 'Sep-26', value: 58 },
+                { month: 'Oct-26', value: 58 },
+                { month: 'Nov-26', value: 58 },
+                { month: 'Dec-26', value: 58 },
+                { month: 'Jan-27', value: 71 },
+                { month: 'Feb-27', value: 83 },
+                { month: 'Mar-27', value: 84 }
             ],
 
-            // Top covered plans (from Fingertip file)
+            // Top covered plans (from Coverage Tracker Executive Summary)
             plans: [
-                { name: 'TRICARE Uniform Formulary', type: 'Federal', lives: 5879432, status: '(T3) Non-Preferred' },
-                { name: 'MGM Resorts International', type: 'Employer', lives: 185337, status: '(T3) Non-Preferred' },
-                { name: 'UnitedHealthcare Community Plan Essential', type: 'HIX-Medicaid', lives: 174217, status: '(T3) Non-Preferred' },
-                { name: 'CHI Franciscan', type: 'Employer', lives: 135877, status: '(T3) Non-Preferred' },
-                { name: 'Apple', type: 'Employer', lives: 118347, status: '(T3) Non-Preferred' }
+                { name: 'TRICARE Uniform Formulary', type: 'Federal', lives: 5749433, status: '(T3) Non-Preferred' },
+                { name: 'CHI Franciscan', type: 'Employer', lives: 217484, status: '(T3) Non-Preferred' },
+                { name: 'MGM Resorts International', type: 'Employer', lives: 183545, status: '(T3) Non-Preferred' },
+                { name: 'General Electric', type: 'Employer', lives: 118127, status: '(T3) Non-Preferred' },
+                { name: 'Apple', type: 'Employer', lives: 106071, status: '(T3) Non-Preferred' }
             ]
         };
         // ============================================================
